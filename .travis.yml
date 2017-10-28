@@ -1,0 +1,61 @@
+language: cpp
+sudo: false
+
+matrix:
+  include:
+
+    - os: linux
+      compiler: gcc
+      env: SOURCES=ubuntu-toolchain-r-test
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+             # compilers
+            - g++
+            - gfortran
+            - cmake
+              # math libraries
+            - libblas-dev
+            - liblapack-dev
+            - libatlas-base-dev
+              # python library, development version
+            - libpython2.7
+              # boost
+            - libboost-all-dev
+
+    - os: osx
+      osx_image: xcode6.4
+      compiler: gcc
+      env: SOURCES=homebrew
+
+install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        brew install cmake boost python gcc 
+        pip install virtualenv
+    elif [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        pip install --user virtualenv
+    fi
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install pep8 pytest
+
+script:
+    # pep8 tests
+ # - pep8 --ignore=E501 lib/config.py
+    # unit tests
+ # - py.test -vv update.py
+ # - py.test -vv test/test.py
+ # - py.test -vv lib/config.py
+   - git clone git://git.blender.org/blender.git
+   - cd blender
+   - git submodule update --init --recursive
+   - git submodule foreach git checkout master
+   - git submodule foreach git pull --rebase origin master
+   - mkdir build
+   - make
+
+notifications:
+  email: false
