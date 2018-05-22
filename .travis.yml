@@ -34,6 +34,7 @@ matrix:
             - libjemalloc-dev
             - spacenavd
             - libopenimageio-dev
+            - libilmbase-dev
 
 install:
   - pip install --user virtualenv
