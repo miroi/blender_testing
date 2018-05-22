@@ -26,6 +26,15 @@ matrix:
             - libpython-all-dev
               # boost
             - libboost-all-dev
+              # OpenEXR
+            - openexr
+            - libopenjpeg-dev
+            - openjpeg
+            - tiff 
+            - openal-soft
+            - jemalloc 
+            - spacenavd
+            - openimageio
 
 install:
   - pip install --user virtualenv
