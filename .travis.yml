@@ -22,6 +22,7 @@ matrix:
            # - libatlas-base-dev
               # python library, development version
             #- libpython2.7
+            - python3
             - libpython-all-dev
               # boost
             - libboost-all-dev
@@ -32,21 +33,19 @@ install:
   - source venv/bin/activate
   - pip install pep8 pytest
 
+#
+# python3 -c 'import sys; print (sys.path[1])'
+
 script:
-    # pep8 tests
- # - pep8 --ignore=E501 lib/config.py
-    # unit tests
- # - py.test -vv update.py
- # - py.test -vv test/test.py
- # - py.test -vv lib/config.py
    - git clone git://git.blender.org/blender.git
    - cd blender
    - git submodule update --init --recursive
    - git submodule foreach git checkout master
    - git submodule foreach git pull --rebase origin master
-   - cd .. # go out
+   # compile blender in own build subdirectory
    - mkdir build
-   - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m ../blender
+   - cd build
+   - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m 
    - make 
 
 notifications:

@@ -1,6 +1,6 @@
-# blender_testing
+Blender automated testing
 
-Various tests of the Blender open-software.
+Tests of the Blender open-software.
 
 The source code is obtained https://developer.blender.org/diffusion/B/repository/master/.
 
