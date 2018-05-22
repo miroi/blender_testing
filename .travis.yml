@@ -45,7 +45,7 @@ script:
    # compile blender in own build subdirectory
    - mkdir build
    - cd build
-   - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m 
+   - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
    - make 
 
 notifications:
