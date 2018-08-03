@@ -46,16 +46,24 @@ install:
 # python3 -c 'import sys; print (sys.path[1])'
 
 script:
+#    ...determine number of processors
+   - echo "The shell is $SHELL"
+   - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+   - echo "Number of processors/jobs for the build step is $N_PROC"
+#
    - git clone git://git.blender.org/blender.git
    - cd blender
    - git submodule update --init --recursive
    - git submodule foreach git checkout master
    - git submodule foreach git pull --rebase origin master
+   # print last 3 commits
+   - echo -e "\n Last 3 commits of blender:"
+   - git log -3
    # compile blender in own build subdirectory
    - mkdir build
    - cd build
    - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
-   - make 
+   - make -j $N_PROC
 
 notifications:
   email: false
