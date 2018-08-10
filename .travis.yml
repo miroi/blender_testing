@@ -34,7 +34,7 @@ matrix:
             - libjemalloc-dev
             - spacenavd
             - libopenimageio-dev
-            - libopenimageio1.7  # try this !
+            - libopenimageio1.6  # try this !
             - libilmbase-dev
 
 install:
