@@ -34,6 +34,7 @@ matrix:
             - libjemalloc-dev
             - spacenavd
             - libopenimageio-dev
+            - libopenimageio1.7  # try this !
             - libilmbase-dev
 
 install:
@@ -46,6 +47,8 @@ install:
 # python3 -c 'import sys; print (sys.path[1])'
 
 script:
+   - echo -e "\n Ubuntu whereabouts: \n"
+   - lsb_release -a
 #    ...determine number of processors
    - echo "The shell is $SHELL"
    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
