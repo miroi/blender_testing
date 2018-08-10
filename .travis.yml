@@ -49,7 +49,8 @@ install:
    - wget http://download.savannah.gnu.org/releases/openexr/pyilmbase-2.2.1.tar.gz
    - tar xzf pyilmbase-2.2.1.tar.gz
    - cd pyilmbase-2.2.1
-   - configure --prefix=$PWD
+   - ls -lt
+   - ./configure --prefix=$PWD
    - make all install
    - ls -lt
    - export PATH=$PWD/bin:$PATH 
