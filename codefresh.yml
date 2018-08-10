@@ -14,5 +14,18 @@ steps:
 
         # Run your app
         # CMD start.sh
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+        git clone git://git.blender.org/blender.git
+        cd blender
+        git submodule update --init --recursive
+        git submodule foreach git checkout master
+        git submodule foreach git pull --rebase origin master
+        echo -e "\n Last 3 commits of blender:"
+        git log -3
+        mkdir build
+        cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+        let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+        echo "Number of processors/jobs for the build step is $N_PROC"
+        make -j $N_PROC
+
+
 
