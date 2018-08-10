@@ -1,0 +1,77 @@
+## see: http://docs.shippable.com/en/latest/samples/index.html
+## see: https://github.com/sympy/csympy/blob/b5b126d6465e6f6293edffb0342258b3fb8a30d3/.travis.yml
+##
+## This script can be also adapted for travis-ci
+##
+
+# include branches to test (master branch only)
+branches:
+    only:
+        - master
+
+# language settings - prepare Python environment
+language: cpp
+
+# install/upgrade needed software
+install:
+# install the newest versions
+    - sudo apt-get install gcc g++ cmake python-pip python3 libpython-all-dev libboost-all-dev 
+    - sudo apt-get install libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev libghc-openal-dev
+    - sudo apt-get install  libjemalloc-dev spacenavd libopenimageio-dev libilmbase-dev
+
+# for public modules use (sync, init, update)
+git:
+  submodules: true
+
+# system info
+before_script:
+# show info about available processors
+    - lscpu
+    - echo nproc=$(nproc)
+# show available disc space
+    - df -h
+# show available memory
+    - free -m
+# show cmake version
+    - cmake --version
+# show Python version
+    - python -V
+#
+    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+    - echo "Number of processors/jobs for the build step is $N_PROC"
+
+    
+# update submodule; configure, build optimized code and run tests (Dirac 64-bit with MPICH2)
+script:
+    - git clone git://git.blender.org/blender.git
+    - cd blender
+    - git submodule update --init --recursive
+    - git submodule foreach git checkout master
+    - git submodule foreach git pull --rebase origin master
+    - echo -e "\n Last 3 commits of blender:"
+    - git log -3
+    - mkdir build
+    - cd build
+    - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+    - make -j $N_PROC
+  
+# ldd : show dependencies
+    #- ldd dirac.x
+# if some tests fail build/ctest can continue because of: || true
+   # - ctest -j $(nproc)  -D ExperimentalTest -L short || true
+  #  - ctest -j $TEST_N_PROC  -D ExperimentalTest -L short || true
+  #  - ctest -D ExperimentalSubmit
+# now check the release subset
+
+#    - make -j $(nproc) release
+#    - tar xzf DIRAC-16.0-Source.tar.gz
+#    - cd DIRAC-16.0-Source
+#    - python ./setup --type=debug build_release
+#    - cd build_release
+#    - ctest -D ExperimentalConfigure
+#    - ctest -j $(nproc) -D ExperimentalBuild
+#    - ctest -D ExperimentalSubmit
+
+# turn off email notifications
+notifications:
+    email: false
