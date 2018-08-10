@@ -33,8 +33,9 @@ matrix:
             - libghc-openal-dev
             - libjemalloc-dev
             - spacenavd
-            - libopenimageio-dev
-            - libopenimageio1.5  # try this !
+            - openimageio 
+            #- libopenimageio-dev
+            #- libopenimageio1.5  # try this !
             - libilmbase-dev
 
 install:
