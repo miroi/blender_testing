@@ -1,27 +1,72 @@
 language: cpp
+sudo: false
 
-before_install:
-  # update apt-gets repository sources
-  - sudo apt-get update -qq
-  - sudo apt-get install cmake python3 libboost-all-dev libopenjpeg-dev
-  - sudo apt-get install libpython-all-dev libopenexr-dev libtiff5-dev libghc-openal-dev 
-  - sudo apt-get install libjemalloc-dev spacenavd libopenimageio-dev libilmbase-dev 
+matrix:
+  include:
 
+    - os: linux
+      compiler: gcc
+      env: SOURCES=ubuntu-toolchain-r-test
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+             # compilers
+            - g++
+            #- gfortran
+            - cmake
+              # math libraries
+           # - libblas-dev
+           # - liblapack-dev
+           # - libatlas-base-dev
+              # python library, development version
+            #- libpython2.7
+            - python3
+            - libpython-all-dev
+              # boost
+            - libboost-all-dev
+            - libopenexr-dev
+            - libopenjpeg-dev
+            - libtiff5 
+            - libtiff5-dev
+            - libghc-openal-dev
+            - libjemalloc-dev
+            - spacenavd
+            - libopenimageio-dev
+            - libilmbase-dev
 
 install:
-  - lsb_release -a
-  - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
-  - git clone git://git.blender.org/blender.git
-  - cd blender
-  - git submodule update --init --recursive
-  - git submodule foreach git checkout master
-  - git submodule foreach git pull --rebase origin master
-  - echo -e "\n Last 3 commits of blender:"
-  - git log -3
+  - pip install --user virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install pep8 pytest
 
-script: 
-  - mkdir build
-  - cd build
-  - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
-  - make -j $N_PROC
+#
+# python3 -c 'import sys; print (sys.path[1])'
 
+script:
+   - echo -e "\n Ubuntu whereabouts: \n"
+   - lsb_release -a
+#    ...determine number of processors
+   - echo "The shell is $SHELL"
+   - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+   - echo "Number of processors/jobs for the build step is $N_PROC"
+#
+   - git clone git://git.blender.org/blender.git
+   - cd blender
+   - git submodule update --init --recursive
+   - git submodule foreach git checkout master
+   - git submodule foreach git pull --rebase origin master
+   # print last 3 commits
+   - echo -e "\n Last 3 commits of blender:"
+   - git log -3
+   # compile blender in own build subdirectory
+   - mkdir build
+   - cd build
+   - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+   - make -j $N_PROC
+
+notifications:
+  email: false
