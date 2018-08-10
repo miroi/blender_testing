@@ -7,6 +7,7 @@ matrix:
     - os: linux
       compiler: gcc
       env: SOURCES=ubuntu-toolchain-r-test
+      dist: xenial
       addons:
         apt:
           sources:
@@ -34,8 +35,7 @@ matrix:
             - libjemalloc-dev
             - spacenavd
             - openimageio 
-            #- libopenimageio-dev
-            #- libopenimageio1.5  # try this !
+            - libopenimageio-dev
             - libilmbase-dev
 
 install:
