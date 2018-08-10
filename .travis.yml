@@ -34,7 +34,6 @@ matrix:
             - libghc-openal-dev
             - libjemalloc-dev
             - spacenavd
-            - openimageio 
             - libopenimageio-dev
             - libilmbase-dev
 
