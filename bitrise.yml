@@ -1,0 +1,46 @@
+##
+##
+##
+
+build:
+  steps:
+    - install-packages:
+        packages: "git gcc g++ cmake python-pip python3 libpython-all-dev libboost-all-dev libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev libghc-openal-dev libjemalloc-dev spacenavd libopenimageio-dev libilmbase-dev"
+
+    - script:
+        name: show system resources
+        code: |
+          lscpu
+          df -h
+          free -m
+          echo "The shell is $SHELL"
+          lsb_release -a
+          let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+          echo "Number of processors/jobs for the build step is $N_PROC"
+
+    - script:
+        name: clone
+        code: |
+          git clone git://git.blender.org/blender.git
+          cd blender
+          git submodule update --init --recursive
+          git submodule foreach git checkout master
+          git submodule foreach git pull --rebase origin master
+          # print last 3 commits
+          echo -e "\n Last 3 commits of blender:"
+          git log -3
+
+
+    - script:
+        name: configure & compile BLENDER
+        code: |
+          mkdir build
+          cd build
+          cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+          make -j $N_PROC
+
+
+## turn off email notifications
+notifications:
+        email: false
+
