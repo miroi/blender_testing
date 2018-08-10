@@ -27,14 +27,14 @@ matrix:
             - libpython-all-dev
               # boost
             - libboost-all-dev
-            #- libopenexr-dev # OpenImageIO needs recent version !!
+            - libopenexr-dev # OpenImageIO needs recent version !!
             - libopenjpeg-dev
             - libtiff5 
             - libtiff5-dev
             - libghc-openal-dev
             - libjemalloc-dev
             - spacenavd
-            #- libopenimageio-dev # replace from source !
+            - libopenimageio-dev # replace from source !
             - libilmbase-dev
 
 install:
