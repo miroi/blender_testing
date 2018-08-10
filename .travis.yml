@@ -34,14 +34,27 @@ matrix:
             - libghc-openal-dev
             - libjemalloc-dev
             - spacenavd
-            - libopenimageio-dev
+            #- libopenimageio-dev # replace from source !
             - libilmbase-dev
 
 install:
-  - pip install --user virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-  - pip install pep8 pytest
+   - echo "The shell is $SHELL"
+   - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+   - echo "Number of processors/jobs for the build step is $N_PROC"
+   - pip install --user virtualenv
+   - virtualenv venv
+   - source venv/bin/activate
+   - pip install pep8 pytest
+   - echo -e "Cloning OpenImageIO"
+   - git clone git://github.com/OpenImageIO/oiio.git oiio
+   - cd oiio
+   - mkdir build
+   - cd build
+   - cmake ..
+   - make -j $N_PROC
+   - ls -lt
+   - export PATH=$PWD:$PATH
+   - echo -e "path=$PATH"
 
 #
 # python3 -c 'import sys; print (sys.path[1])'
@@ -49,11 +62,8 @@ install:
 script:
    - echo -e "\n Ubuntu whereabouts: \n"
    - lsb_release -a
-#    ...determine number of processors
-   - echo "The shell is $SHELL"
-   - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
-   - echo "Number of processors/jobs for the build step is $N_PROC"
 #
+   - echo -e "Clonig BLENDER..."
    - git clone git://git.blender.org/blender.git
    - cd blender
    - git submodule update --init --recursive
