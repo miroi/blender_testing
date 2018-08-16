@@ -10,7 +10,7 @@ branches:
         - master
 
 # language settings - prepare Python environment
-language: cpp
+language: C++
 
 # install/upgrade needed software
 install:
