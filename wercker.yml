@@ -1,0 +1,22 @@
+box: nodesource/xenial
+build:
+  steps:
+  # Execute the bundle install step, a step provided by wercker
+    - bundle-install
+    - install-packages:
+        packages: "cmake python3 libpython-all-dev libboost-all-dev libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev libghc-openal-dev libjemalloc-dev spacenavd libopenimageio-dev libilmbase-dev"
+    - script:
+        name: run setup configuration script
+        code: |
+           echo -e "Clonig BLENDER..."
+           git clone git://git.blender.org/blender.git
+           cd blender
+           git submodule update --init --recursive
+           git submodule foreach git checkout master
+           git submodule foreach git pull --rebase origin master
+           echo -e "\n Last 3 commits of blender:"
+           git log -3
+           mkdir build
+           cd build
+           cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+           make
