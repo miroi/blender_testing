@@ -1,0 +1,57 @@
+## Simple buildup configuration file for circleci.com
+##
+## See https://circleci.com/docs/getting-started
+##     https://circleci.com/docs/configuration
+##     https://circleci.com/docs/config-sample
+##
+## OpenMPI 64-bit installation: 
+##     https://gist.github.com/rbast/81760961c5a8199e561a
+##     http://diracprogram.org/doc/release-12/installation/int64/mpi.html
+##
+
+# list of branches to build
+general:
+    branches:
+        only:
+            - master
+
+test:
+    pre:
+# check our environment variables
+        - echo "Number of processors on this machine is `cat /proc/cpuinfo | grep processor | wc -l` "
+# take care of proper library
+        - sudo apt-get update
+        - sudo apt-get autoclean
+        - sudo apt-get clean
+        - sudo apt-get install cmake python3 libpython-all-dev libboost-all-dev
+        - sudo apt-get install libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev
+        - sudo apt-get install libghc-openal-dev libjemalloc-dev spacenavd
+        - sudo apt-get install libopenimageio-dev
+        - sudo apt-get install libilmbase-dev
+# show info about available processors
+        - lscpu
+    override:
+# configure, build optimized code with OpenBLAS and run the test
+        - echo -e "Clonig BLENDER..."
+        - git clone git://git.blender.org/blender.git
+        - cd blender
+        - git submodule update --init --recursive
+        - git submodule foreach git checkout master
+        - git submodule foreach git pull --rebase origin master
+   # print last 3 commits
+        - echo -e "\n Last 3 commits of blender:"
+        - git log -3
+        - echo -e "\n Ubuntu whereabouts:"
+        - lsb_release -a
+        - echo -e "\n The shell is $SHELL"
+        - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+        - echo -e "\n Number of processors/jobs for the build step is $N_PROC"
+        # compile blender in own build subdirectory
+        - mkdir build
+        - cd build
+        - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+        - make -j $N_PROC
+
+
+
+
