@@ -2,7 +2,7 @@ language: C++
 sudo: enabled
 
 before_install:
-   - sudo add-apt-repository ppa:irie/openimageio
+   - sudo add-apt-repository ppa:irie/openimageio -y
    - sudo apt-get update -qq
    - sudo apt-get install -qq cmake python3 libpython-all-dev libboost-all-dev 
    - sudo apt-get install -qq libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev
