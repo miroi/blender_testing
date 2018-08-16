@@ -17,17 +17,11 @@ matrix:
             - g++
             #- gfortran
             - cmake
-              # math libraries
-           # - libblas-dev
-           # - liblapack-dev
-           # - libatlas-base-dev
-              # python library, development version
-            #- libpython2.7
             - python3
             - libpython-all-dev
               # boost
             - libboost-all-dev
-            - libopenexr-dev # OpenImageIO needs recent version !!
+            - libopenexr-dev # 
             - libopenjpeg-dev
             - libtiff5 
             - libtiff5-dev
@@ -38,42 +32,12 @@ matrix:
             - libilmbase-dev
 
 install:
+   - echo -e "\n Ubuntu whereabouts: \n"
+   - lsb_release -a
    - echo "The shell is $SHELL"
    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
    - echo "Number of processors/jobs for the build step is $N_PROC"
-   - pip install --user virtualenv
-   - virtualenv venv
-   - source venv/bin/activate
-   - pip install pep8 pytest
-   - echo -e "Downloading OpenEXR "
-   - wget http://download.savannah.gnu.org/releases/openexr/pyilmbase-2.2.1.tar.gz
-   - tar xzf pyilmbase-2.2.1.tar.gz
-   - cd pyilmbase-2.2.1
-   - ls -lt
-   - ./configure --prefix=$PWD
-   - make all install
-   - ls -lt
-   - export PATH=$PWD/bin:$PATH 
-   - echo -e "path=$PATH"
- 
-   - echo -e "Cloning OpenImageIO"
-   - git clone git://github.com/OpenImageIO/oiio.git oiio
-   - cd oiio
-   - mkdir build
-   - cd build
-   - cmake ..
-   - make -j $N_PROC
-   - ls -lt
-   - export PATH=$PWD:$PATH
-   - echo -e "path=$PATH"
-
-#
-# python3 -c 'import sys; print (sys.path[1])'
-
-script:
-   - echo -e "\n Ubuntu whereabouts: \n"
-   - lsb_release -a
-#
+   # 
    - echo -e "Clonig BLENDER..."
    - git clone git://git.blender.org/blender.git
    - cd blender
@@ -83,6 +47,16 @@ script:
    # print last 3 commits
    - echo -e "\n Last 3 commits of blender:"
    - git log -3
+
+  # - pip install --user virtualenv
+  # - virtualenv venv
+  # - source venv/bin/activate
+  #- pip install pep8 pytest
+
+#
+# python3 -c 'import sys; print (sys.path[1])'
+
+script:
    # compile blender in own build subdirectory
    - mkdir build
    - cd build
