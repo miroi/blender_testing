@@ -1,54 +1,24 @@
-language: cpp
-sudo: false
+language: C++
+sudo: enabled
 
-matrix:
-  include:
-
-    - os: linux
-      compiler: gcc
-      env: SOURCES=ubuntu-toolchain-r-test
-      dist: xenial
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-             # compilers
-            - g++
-            #- gfortran
-            - cmake
-            - python3
-            - libpython-all-dev
-              # boost
-            - libboost-all-dev
-            - libopenexr-dev # 
-            - libopenjpeg-dev
-            - libtiff5 
-            - libtiff5-dev
-            - libghc-openal-dev
-            - libjemalloc-dev
-            - spacenavd
-            - libopenimageio-dev # replace from source !
-            - libilmbase-dev
+before_install:
+   - sudo add-apt-repository ppa:irie/openimageio
+   - sudo apt-get update -qq
+   - sudo apt-get install -qq cmake python3 libpython-all-dev libboost-all-dev 
+   - sudo apt-get install -qq libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev
+   - sudo apt-get install -qq libghc-openal-dev libjemalloc-dev spacenavd libopenimageio-dev
+   - sudo apt-get install -qq libilmbase-dev
 
 install:
-   #- echo -e "Clonig BLENDER..."
+   - echo -e "Clonig BLENDER..."
    - git clone git://git.blender.org/blender.git
    - cd blender
    - git submodule update --init --recursive
    - git submodule foreach git checkout master
    - git submodule foreach git pull --rebase origin master
    # print last 3 commits
-   #- echo -e "\n Last 3 commits of blender:"
-   #- git log -3
-
-  # - pip install --user virtualenv
-  # - virtualenv venv
-  # - source venv/bin/activate
-  #- pip install pep8 pytest
-
-#
-# python3 -c 'import sys; print (sys.path[1])'
+   - echo -e "\n Last 3 commits of blender:"
+   - git log -3
 
 script:
    - echo -e "\n Ubuntu whereabouts: \n"
