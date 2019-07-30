@@ -13,11 +13,9 @@ branches:
 language: c
 
 # install/upgrade needed software
-install:
+#install:
 # install the newest versions
-    - sudo apt-get install gcc g++ cmake python-pip python3 libpython-all-dev libboost-all-dev 
-    - sudo apt-get install libopenexr-dev libopenjpeg-dev libtiff5 libtiff5-dev libghc-openal-dev
-    - sudo apt-get install  libjemalloc-dev spacenavd libopenimageio-dev libilmbase-dev
+#    - sudo apt-get update -qq
 
 # for public modules use (sync, init, update)
 git:
@@ -26,6 +24,8 @@ git:
 # system info
 before_script:
 # show info about available processors
+    - echo -e "\n Ubuntu whereabouts:"
+    - lsb_release -a
     - lscpu
     - echo nproc=$(nproc)
 # show available disc space
@@ -39,7 +39,6 @@ before_script:
 #
     - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
     - echo "Number of processors/jobs for the build step is $N_PROC"
-
     
 # update submodule; configure, build optimized code and run tests (Dirac 64-bit with MPICH2)
 script:
@@ -50,10 +49,15 @@ script:
     - git submodule foreach git pull --rebase origin master
     - echo -e "\n Last 3 commits of blender:"
     - git log -3
-    - mkdir build
-    - cd build
-    - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
-    - make -j $N_PROC
+#      ... build all dependencies !
+    - cd build_files/build_environment
+    - ./install_deps.sh --show-deps
+    - ./install_deps.sh -build-all --no-confirm
+
+   # - mkdir build
+   # - cd build
+   # - cmake -DPYTHON_LIBRARY=/usr/bin/python3.4m -DPYTHON_INCLUDE_DIR=/usr/include/python3.4m  ..
+   # - make -j $N_PROC
   
 # ldd : show dependencies
     #- ldd dirac.x
