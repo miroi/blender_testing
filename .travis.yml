@@ -5,11 +5,11 @@ sudo: enabled
 git:
   quiet: true
 
-before_install:
+#before_install:
  #  - sudo add-apt-repository ppa:irie/openimageio -y # https://launchpad.net/ubuntu/+source/openimageio
  #  - sudo add-apt-repository ppa:irie/openexr -y  # https://launchpad.net/~irie/+archive/ubuntu/openexr
-   - sudo apt-get update -qq
-   - sudo apt-get install -qq cmake
+  # - sudo apt-get update -qq
+  # - sudo apt-get install -qq cmake
  #  - sudo apt-get install -qq python3 libpython-all-dev 
  #  - sudo apt-get install -qq libboost-all-dev 
  #  - sudo apt-get install -qq libopenexr-dev 
@@ -34,12 +34,13 @@ install:
 script:
    - echo -e "\n Ubuntu whereabouts:"
    - lsb_release -a
-   - echo -e "\n The shell is $SHELL"
+   - echo -e "\n The shell is: $SHELL"
    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
    - echo -e "\n Number of processors/jobs for the build step is $N_PROC"
 #    .... build all dependencies !
    - cd build_files/build_environment
-   - ./install_deps.sh -build-all
+   - ./install_deps.sh --show-deps
+   - ./install_deps.sh -build-all --no-confirm
    # compile blender in own build subdirectory
    #- mkdir build
    #- cd build
